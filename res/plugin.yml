@@ -1,0 +1,6 @@
+ name: Lithium
+ version: 1.4.1
+ description: Bridge between client and server. Used to create local GUIs.
+ author: NickAc
+
+ main: net.nickac.lithium.frontend.LithiumPlugin
