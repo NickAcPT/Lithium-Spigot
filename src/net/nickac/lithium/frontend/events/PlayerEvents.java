@@ -28,13 +28,16 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class PlayerEvents implements Listener {
 
+
 	@EventHandler
 	public void on(PlayerJoinEvent e) {
+		//We need to add the player to the manager, or else, developers would get null values.
 		LithiumPlugin.getInstance().getPlayerManager().addPlayer(e.getPlayer());
 	}
 
 	@EventHandler
 	public void on(PlayerQuitEvent e) {
+		//The player has left! Just remove him!
 		LithiumPlugin.getInstance().getPlayerManager().removePlayer(e.getPlayer());
 	}
 }

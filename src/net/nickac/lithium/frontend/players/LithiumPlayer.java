@@ -63,8 +63,21 @@ public class LithiumPlayer {
 	}
 
 	public static void removeWindow(UUID u) {
-		if (windows.containsKey(u)) windows.get(u).getControls().forEach(c -> controls.remove(c.getUUID()));
+		if (!windows.containsKey(u))
+			return;
+		windows.get(u).getControls().forEach(LithiumPlayer::removeControl);
 		windows.remove(u);
+	}
+
+	public static void removeControl(LControl l) {
+		removeControl(l.getUUID());
+	}
+
+	public static void removeControl(UUID l) {
+		if (!controls.containsKey(l)) return;
+		LControl ctrl = controls.get(l);
+		if (ctrl instanceof LContainer) ((LContainer) ctrl).getControls().forEach(LithiumPlayer::removeControl);
+		controls.remove(l);
 	}
 
 	public void refreshControl(UUID uuid) {
