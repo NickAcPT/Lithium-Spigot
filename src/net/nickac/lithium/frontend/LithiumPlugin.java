@@ -29,8 +29,18 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Created by NickAc for Lithium!
  */
 public class LithiumPlugin extends JavaPlugin {
+	/**
+	 * Get the plugin channel of Lithium
+	 */
 	public static String LITHIUM_CHANNEL = "Lithium";
+	/**
+	 * Instance
+	 */
 	private static LithiumPlugin instance;
+	/**
+	 * The player manager.<br>
+	 * Used to open lithium windows.
+	 */
 	@Getter
 	private LithiumPlayerManager playerManager;
 
