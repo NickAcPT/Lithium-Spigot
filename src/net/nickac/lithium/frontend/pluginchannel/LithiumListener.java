@@ -41,7 +41,7 @@ public class LithiumListener implements PluginMessageListener {
 	public void onPluginMessageReceived(String s, Player player, byte[] bytes) {
 		if (!s.equals(LITHIUM_CHANNEL)) return;
 		String msg = LithiumUtils.readUTF8String(bytes).trim();
-		player.sendMessage("§6[Lithium-Debug] " + msg);
+		//player.sendMessage("§6[Lithium-Debug] " + msg);
 		switch (msg) {
 			case "Lithium|OK":
 				player.sendMessage(GRAY + "[" + GOLD + "Lithium" + GRAY + "] " + GREEN + "Thank you for using Lithium!");
@@ -50,9 +50,9 @@ public class LithiumListener implements PluginMessageListener {
 			default:
 				int firstIndex = msg.indexOf('|') + 1;
 				int secondIndex = msg.indexOf('|', firstIndex) + 1;
-				String msg2 = msg.substring(0, secondIndex);
-				player.sendMessage("§3[LITHIUMDEBUG] " + msg2);
 				int lastIndex = msg.lastIndexOf('|') + 1;
+				String msg2 = msg.substring(0, secondIndex != -1 ? secondIndex : lastIndex);
+				//player.sendMessage("§3[LITHIUMDEBUG] " + msg2);
 				if (msg2.equals(LITHIUM_BUTTON_ACTION)) {
 					LControl c = LithiumPlayer.getControlById(UUID.fromString(msg.substring(lastIndex)));
 					if (c != null && c.getClass().equals(LButton.class)) {
@@ -66,7 +66,10 @@ public class LithiumListener implements PluginMessageListener {
 				} else if (msg2.equals(LITHIUM_TEXTBOX_TEXT_CHANGED)) {
 					LControl w = LithiumPlayer.getControlById(UUID.fromString(msg.substring(secondIndex, lastIndex - 1)));
 					if (w != null && w.getClass().equals(LTextBox.class)) {
-						((LTextBox) w).invokeTextChanged(player.getUniqueId());
+						LTextBox txt = (LTextBox) w;
+						txt.setInternalText(msg.substring(lastIndex));
+						//player.sendMessage("new: |" + msg.substring(lastIndex) + "|");
+						txt.invokeTextChanged(player.getUniqueId());
 						//TODO: SET TEXT OF TEXTBOX ON SERVER AND INVOKE EVENT
 					}
 				} else if (msg2.equals(LITHIUM_WINDOW_CLOSE)) {
