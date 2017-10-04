@@ -82,7 +82,7 @@ public class LithiumPlayer {
 
 	public void refreshControl(UUID uuid) {
 		LControl c = getControlById(uuid);
-		if (usingLithium && c != null) {
+		if (usingLithium && c != null && uuid != null) {
 			handle.sendPluginMessage(
 					LithiumPlugin.getInstance(),
 					LithiumPlugin.LITHIUM_CHANNEL,

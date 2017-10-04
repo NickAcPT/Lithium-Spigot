@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$USER_HOME$/IdeaProjects/Lithium/Backend/Backend.iml" filepath="$USER_HOME$/IdeaProjects/Lithium/Backend/Backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lithium-SpigotBridge.iml" filepath="$PROJECT_DIR$/Lithium-SpigotBridge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../LithiumTest/LithiumTest.iml" filepath="$PROJECT_DIR$/../LithiumTest/LithiumTest.iml" />
     </modules>
   </component>
 </project>

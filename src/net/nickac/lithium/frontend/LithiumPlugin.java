@@ -52,7 +52,10 @@ public class LithiumPlugin extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		playerManager = new LithiumPlayerManager();
-		LithiumConstants.onRefresh = (viewer, c) -> playerManager.getPlayer(Bukkit.getPlayer(viewer)).refreshControl(c.getUUID());
+		LithiumConstants.onRefresh = (viewer, c) -> {
+			if (viewer != null)
+				playerManager.getPlayer(Bukkit.getPlayer(viewer)).refreshControl(c.getUUID());
+		};
 		LithiumConstants.onClose = (c, viewer) -> playerManager.getPlayer(Bukkit.getPlayer(viewer)).closeInterface();
 		//We need to register the incoming message plugin message!
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, LITHIUM_CHANNEL, new LithiumListener());
