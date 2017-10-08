@@ -30,6 +30,7 @@ import net.nickac.lithium.backend.controls.LControl;
 import net.nickac.lithium.backend.controls.impl.LButton;
 import net.nickac.lithium.backend.controls.impl.LTextBox;
 import net.nickac.lithium.backend.controls.impl.LWindow;
+import net.nickac.lithium.backend.serializer.SerializationUtils;
 import net.nickac.lithium.frontend.LithiumPlugin;
 import net.nickac.lithium.frontend.LithiumUtils;
 import net.nickac.lithium.frontend.players.LithiumPlayer;
@@ -61,7 +62,6 @@ public class LithiumListener implements PluginMessageListener {
 				int secondIndex = msg.indexOf('|', firstIndex) + 1;
 				int lastIndex = msg.lastIndexOf('|') + 1;
 				String msg2 = msg.substring(0, secondIndex != -1 ? secondIndex : lastIndex);
-				//player.sendMessage("§3[LITHIUMDEBUG] " + msg2);
 				if (msg2.equals(LITHIUM_BUTTON_ACTION)) {
 					LControl c = LithiumPlayer.getControlById(UUID.fromString(msg.substring(lastIndex)));
 					if (c != null && c.getClass().equals(LButton.class)) {
@@ -76,10 +76,9 @@ public class LithiumListener implements PluginMessageListener {
 					LControl w = LithiumPlayer.getControlById(UUID.fromString(msg.substring(secondIndex, lastIndex - 1)));
 					if (w != null && w.getClass().equals(LTextBox.class)) {
 						LTextBox txt = (LTextBox) w;
-						txt.setInternalText(msg.substring(lastIndex));
+						txt.setInternalText(SerializationUtils.stringToObject(msg.substring(lastIndex), String.class));
 						//player.sendMessage("new: |" + msg.substring(lastIndex) + "|");
 						txt.invokeTextChanged(player.getUniqueId());
-						//TODO: SET TEXT OF TEXTBOX ON SERVER AND INVOKE EVENT
 					}
 				} else if (msg2.equals(LITHIUM_WINDOW_CLOSE)) {
 					UUID windowID = UUID.fromString(msg.substring(lastIndex));
