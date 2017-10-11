@@ -26,6 +26,7 @@
 
 package net.nickac.lithium.frontend.pluginchannel;
 
+import net.nickac.lithium.backend.controls.IToggleable;
 import net.nickac.lithium.backend.controls.LControl;
 import net.nickac.lithium.backend.controls.impl.LButton;
 import net.nickac.lithium.backend.controls.impl.LTextBox;
@@ -85,6 +86,14 @@ public class LithiumListener implements PluginMessageListener {
 					LWindow w = LithiumPlayer.getWindowById(windowID);
 					w.invokeWindowClose(player.getUniqueId());
 					LithiumPlayer.removeWindow(windowID);
+				} else if (msg2.equals(LITHIUM_TOGGLE_ACTION)) {
+					LControl w = LithiumPlayer.getControlById(UUID.fromString(msg.substring(lastIndex)));
+					if (w instanceof IToggleable) {
+						IToggleable t = (IToggleable) w;
+						t.setChecked(!t.isChecked());
+					}
+
+
 				}
 				break;
 		}
