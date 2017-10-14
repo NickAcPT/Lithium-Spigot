@@ -82,7 +82,10 @@ public class LithiumPlugin extends JavaPlugin {
 
 			@Override
 			public void removeControl(LControl c, LContainer ct, UUID viewer) {
-
+				Player p = Bukkit.getPlayer(viewer);
+				if (p != null && ct instanceof LControl) {
+					LithiumPlayer.sendLithiumMessage(p, LithiumConstants.LITHIUM_REMOVE_FROM_CONTAINER + ((LControl) ct).getUUID() + "|" + c.getUUID());
+				}
 			}
 		};
 		LithiumConstants.onClose = (c, viewer) -> playerManager.getPlayer(Bukkit.getPlayer(viewer)).closeInterface();
