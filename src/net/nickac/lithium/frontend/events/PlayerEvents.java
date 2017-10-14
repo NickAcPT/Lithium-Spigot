@@ -30,6 +30,7 @@ import net.nickac.lithium.frontend.LithiumPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
@@ -39,14 +40,20 @@ public class PlayerEvents implements Listener {
 
 
 	@EventHandler
-	public void on(PlayerJoinEvent e) {
+	public void onPlayerJoin(PlayerJoinEvent e) {
 		//We need to add the player to the manager, or else, developers would get null values.
 		LithiumPlugin.getInstance().getPlayerManager().addPlayer(e.getPlayer());
 	}
 
 	@EventHandler
-	public void on(PlayerQuitEvent e) {
-		//The player has left! Just remove him!
+	public void onPlayerQuit(PlayerQuitEvent e) {
+		//The player has left! Just remove them!
+		LithiumPlugin.getInstance().getPlayerManager().removePlayer(e.getPlayer());
+	}
+
+	@EventHandler
+	public void onPlayerKick(PlayerKickEvent e) {
+		//The player was kicked! Just remove them!
 		LithiumPlugin.getInstance().getPlayerManager().removePlayer(e.getPlayer());
 	}
 }
