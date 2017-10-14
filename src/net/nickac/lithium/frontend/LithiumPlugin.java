@@ -76,7 +76,7 @@ public class LithiumPlugin extends JavaPlugin {
 			public void addControl(LControl c, LContainer ct, UUID viewer) {
 				Player p = Bukkit.getPlayer(viewer);
 				if (p != null && ct instanceof LControl) {
-					LithiumPlayer.sendLithiumMessage(p, LithiumConstants.LITHIUM_ADD_TO_CONTAINER + "|" + ((LControl) ct).getUUID() + "|" + SerializationUtils.objectToString(c));
+					LithiumPlayer.sendLithiumMessage(p, LithiumConstants.LITHIUM_ADD_TO_CONTAINER + ((LControl) ct).getUUID() + "|" + SerializationUtils.objectToString(c));
 				}
 			}
 
