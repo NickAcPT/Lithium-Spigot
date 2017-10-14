@@ -89,32 +89,18 @@ public class LithiumPlayer {
 		controls.remove(l);
 	}
 
+	public static void sendLithiumMessage(Player player, String msg) {
+		player.sendPluginMessage(
+				LithiumPlugin.getInstance(),
+				LithiumPlugin.LITHIUM_CHANNEL,
+				LithiumUtils.writeUTF8String(msg)
+		);
+	}
+
 	public void refreshControl(UUID uuid) {
 		LControl c = getControlById(uuid);
 		if (usingLithium && c != null && uuid != null) {
-			handle.sendPluginMessage(
-					LithiumPlugin.getInstance(),
-					LithiumPlugin.LITHIUM_CHANNEL,
-					LithiumUtils.writeUTF8String(LithiumConstants.LITHIUM_CONTROL_CHANGED + SerializationUtils.objectToString(c))
-			);
-		}
-	}
-
-	public void openInterface(LWindow w) {
-		if (usingLithium) {
-			if (w.getViewer() == null)
-				w.setViewer(handle.getUniqueId());
-			else
-				return;
-			windows.put(w.getUUID(), w);
-			handle.sendPluginMessage(
-					LithiumPlugin.getInstance(),
-					LithiumPlugin.LITHIUM_CHANNEL,
-					LithiumUtils.writeUTF8String(LithiumConstants.LITHIUM_RECEIVE_WINDOW + SerializationUtils.objectToString(w))
-			);
-			w.getControls().forEach(this::registerControl);
-			setCurrentWindow(w);
-			//TODO: Send stuff!
+			sendLithiumMessage(handle, LithiumConstants.LITHIUM_CONTROL_CHANGED + SerializationUtils.objectToString(c));
 		}
 	}
 
@@ -125,14 +111,24 @@ public class LithiumPlayer {
 		controls.put(c.getUUID(), c);
 	}
 
+	public void openInterface(LWindow w) {
+		if (usingLithium) {
+			if (w.getViewer() == null)
+				w.setViewer(handle.getUniqueId());
+			else
+				return;
+			windows.put(w.getUUID(), w);
+			sendLithiumMessage(handle, LithiumConstants.LITHIUM_RECEIVE_WINDOW + SerializationUtils.objectToString(w));
+			w.getControls().forEach(this::registerControl);
+			setCurrentWindow(w);
+			//TODO: Send stuff!
+		}
+	}
+
 	public void closeInterface() {
 		//TODO: Force Close!
 		if (usingLithium) {
-			handle.sendPluginMessage(
-					LithiumPlugin.getInstance(),
-					LithiumPlugin.LITHIUM_CHANNEL,
-					LithiumUtils.writeUTF8String(LithiumConstants.LITHIUM_CLOSE_WINDOW)
-			);
+			sendLithiumMessage(handle, LithiumConstants.LITHIUM_CLOSE_WINDOW);
 			setCurrentWindow(null);
 		}
 	}

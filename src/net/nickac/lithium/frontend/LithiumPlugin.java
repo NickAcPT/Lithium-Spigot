@@ -25,12 +25,20 @@
 package net.nickac.lithium.frontend;
 
 import lombok.Getter;
+import net.nickac.lithium.backend.controls.LContainer;
+import net.nickac.lithium.backend.controls.LControl;
 import net.nickac.lithium.backend.other.LithiumConstants;
+import net.nickac.lithium.backend.other.serverhandlers.LithiumRuntimeControlHandler;
+import net.nickac.lithium.backend.serializer.SerializationUtils;
 import net.nickac.lithium.frontend.events.PlayerEvents;
+import net.nickac.lithium.frontend.players.LithiumPlayer;
 import net.nickac.lithium.frontend.players.LithiumPlayerManager;
 import net.nickac.lithium.frontend.pluginchannel.LithiumListener;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.UUID;
 
 /**
  * Created by NickAc for Lithium!
@@ -63,6 +71,20 @@ public class LithiumPlugin extends JavaPlugin {
 			if (viewer != null)
 				playerManager.getPlayer(Bukkit.getPlayer(viewer)).refreshControl(c.getUUID());
 		};
+		LithiumConstants.onControlRuntime = new LithiumRuntimeControlHandler() {
+			@Override
+			public void addControl(LControl c, LContainer ct, UUID viewer) {
+				Player p = Bukkit.getPlayer(viewer);
+				if (p != null && ct instanceof LControl) {
+					LithiumPlayer.sendLithiumMessage(p, LithiumConstants.LITHIUM_ADD_TO_CONTAINER + "|" + ((LControl) ct).getUUID() + "|" + SerializationUtils.objectToString(c));
+				}
+			}
+
+			@Override
+			public void removeControl(LControl c, LContainer ct, UUID viewer) {
+
+			}
+		};
 		LithiumConstants.onClose = (c, viewer) -> playerManager.getPlayer(Bukkit.getPlayer(viewer)).closeInterface();
 		//We need to register the incoming message plugin message!
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, LITHIUM_CHANNEL, new LithiumListener());
@@ -75,5 +97,6 @@ public class LithiumPlugin extends JavaPlugin {
 		instance = null;
 		LithiumConstants.onRefresh = null;
 		LithiumConstants.onClose = null;
+		LithiumConstants.onControlRuntime = null;
 	}
 }
