@@ -130,7 +130,7 @@ public class LithiumPlayer {
 
 	public void openOverlay(LOverlay o) {
 		if (usingLithium) {
-			if (o.getViewer() != null)
+			if (o.getViewer() == null)
 				o.setViewer(handle.getUniqueId());
 			else return;
 			overlays.put(o.getUUID(), o);
