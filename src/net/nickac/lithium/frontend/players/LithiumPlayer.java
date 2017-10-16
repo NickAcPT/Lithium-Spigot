@@ -1,5 +1,3 @@
-
-
 /*
  * MIT License
  *
@@ -31,6 +29,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.nickac.lithium.backend.controls.LContainer;
 import net.nickac.lithium.backend.controls.LControl;
+import net.nickac.lithium.backend.controls.impl.LOverlay;
 import net.nickac.lithium.backend.controls.impl.LWindow;
 import net.nickac.lithium.backend.other.LithiumConstants;
 import net.nickac.lithium.backend.serializer.SerializationUtils;
@@ -47,10 +46,15 @@ import java.util.UUID;
 public class LithiumPlayer {
 
 	private static HashMap<UUID, LWindow> windows = new HashMap<>();
+	private static HashMap<UUID, LOverlay> overlays = new HashMap<>();
 	private static HashMap<UUID, LControl> controls = new HashMap<>();
 	@Getter
 	@Setter
 	private LWindow currentWindow;
+
+	@Getter
+	@Setter
+	private LOverlay currentOverlay;
 	@Getter
 	private Player handle;
 	@Getter
@@ -118,10 +122,21 @@ public class LithiumPlayer {
 			else
 				return;
 			windows.put(w.getUUID(), w);
-			sendLithiumMessage(handle, LithiumConstants.LITHIUM_RECEIVE_WINDOW + SerializationUtils.objectToString(w));
 			w.getControls().forEach(this::registerControl);
 			setCurrentWindow(w);
-			//TODO: Send stuff!
+			sendLithiumMessage(handle, LithiumConstants.LITHIUM_RECEIVE_WINDOW + SerializationUtils.objectToString(w));
+		}
+	}
+
+	public void openOverlay(LOverlay o) {
+		if (usingLithium) {
+			if (o.getViewer() != null)
+				o.setViewer(handle.getUniqueId());
+			else return;
+			overlays.put(o.getUUID(), o);
+			o.getControls().forEach(this::registerControl);
+			setCurrentOverlay(o);
+			sendLithiumMessage(handle, LithiumConstants.LITHIUM_SHOW_OVERLAY + SerializationUtils.objectToString(o));
 		}
 	}
 
