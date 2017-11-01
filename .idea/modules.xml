@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$USER_HOME$/IdeaProjects/Lithium/Backend/Backend.iml" filepath="$USER_HOME$/IdeaProjects/Lithium/Backend/Backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Backend.iml" filepath="$PROJECT_DIR$/.idea/modules/Backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Backend_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Backend_main.iml" group="Backend" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Backend_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Backend_test.iml" group="Backend" />
       <module fileurl="file://$PROJECT_DIR$/Lithium-SpigotBridge.iml" filepath="$PROJECT_DIR$/Lithium-SpigotBridge.iml" />
       <module fileurl="file://$PROJECT_DIR$/../LithiumTest/LithiumTest.iml" filepath="$PROJECT_DIR$/../LithiumTest/LithiumTest.iml" />
     </modules>
