@@ -28,9 +28,7 @@ package net.nickac.lithium.frontend.pluginchannel;
 
 import net.nickac.lithium.backend.controls.IToggleable;
 import net.nickac.lithium.backend.controls.LControl;
-import net.nickac.lithium.backend.controls.impl.LButton;
-import net.nickac.lithium.backend.controls.impl.LTextBox;
-import net.nickac.lithium.backend.controls.impl.LWindow;
+import net.nickac.lithium.backend.controls.impl.*;
 import net.nickac.lithium.backend.serializer.SerializationUtils;
 import net.nickac.lithium.frontend.LithiumPlugin;
 import net.nickac.lithium.frontend.LithiumUtils;
@@ -91,9 +89,22 @@ public class LithiumListener implements PluginMessageListener {
 					if (w instanceof IToggleable) {
 						IToggleable t = (IToggleable) w;
 						t.setChecked(!t.isChecked());
+						if (w.getClass().equals(LCheckBox.class)) {
+							((LCheckBox) w).invokeToggled(player.getUniqueId());
+						}
 					}
-
-
+				} else if (msg2.equals(LITHIUM_SLIDER_VALUE_CHANGED)) {
+					LControl w = LithiumPlayer.getControlById(UUID.fromString(msg.substring(secondIndex, lastIndex - 1)));
+					if (w.getClass().equals(LSlider.class)) {
+						LSlider sl = (LSlider) w;
+						try {
+							sl.setValue(Integer.parseInt(msg.substring(lastIndex)));
+							sl.invokeValueChanged(player.getUniqueId());
+						} catch (Exception e) {
+							//Malformed packet!
+							return;
+						}
+					}
 				}
 				break;
 		}
