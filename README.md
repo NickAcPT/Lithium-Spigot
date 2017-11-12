@@ -1,4 +1,4 @@
-![Lithium Logo]( "Lithium logo")
+![Lithium Logo](https://i.imgur.com/EJx4dOL.png "Lithium logo")
 
 ---
 # Lithium Framework
