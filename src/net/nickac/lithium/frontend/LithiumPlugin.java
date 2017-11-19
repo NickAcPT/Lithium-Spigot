@@ -69,8 +69,12 @@ public class LithiumPlugin extends JavaPlugin {
 		playerManager = new LithiumPlayerManager();
 		LithiumConstants.onRefresh = (viewer, c) -> {
 			Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-				if (viewer != null)
-					playerManager.getPlayer(Bukkit.getPlayer(viewer)).refreshControl(c.getUUID());
+				if (viewer != null) {
+					LithiumPlayer lithiumPlayer = playerManager.getPlayer(Bukkit.getPlayer(viewer));
+					if (lithiumPlayer != null) {
+						lithiumPlayer.refreshControl(c.getUUID());
+					}
+				}
 			});
 
 		};
