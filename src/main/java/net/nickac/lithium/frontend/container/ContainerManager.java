@@ -14,10 +14,6 @@ import java.util.UUID;
 
 public class ContainerManager {
 
-    static {
-
-    }
-
     private Map<UUID, LContainerViewable> viewableMap = new HashMap<>();
     private Map<UUID, LControl> controls = new HashMap<>();
     private ContainerMap containerMap;
@@ -42,6 +38,7 @@ public class ContainerManager {
 
                 try {
                     PacketOut packetObject = packetConstructor.newInstance(containerViewable);
+                    System.out.println(packetObject.execute());
                     lithiumPlayer.sendLithiumMessage(String.join("|", packetObject.execute()));
                 } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
                     e.printStackTrace();

@@ -33,6 +33,7 @@ import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketHandler
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +41,6 @@ import java.util.List;
  * Created by NickAc for Lithium!
  */
 public class LithiumListener implements PluginMessageListener {
-
 
     private PacketHandler packetHandler;
     private LithiumPlayerManager lithiumPlayerManager;
@@ -53,9 +53,14 @@ public class LithiumListener implements PluginMessageListener {
     @Override
     public void onPluginMessageReceived(String s, Player player, byte[] bytes) {
         String message = LithiumUtils.readUTF8String(bytes).trim();
-        String[] msgArray = message.split("|");
+        String[] msgArray = message.split("\\|");
         String key = msgArray[0];
-        List<String> data = Arrays.asList(msgArray).subList(1, msgArray.length - 1);
+
+        List<String> data = new ArrayList<>();
+        if (msgArray.length > 1) {
+            List<String> par = Arrays.asList(msgArray).subList(1, msgArray.length);
+            data.addAll(par);
+        }
         packetHandler.handlePacket(new MessageImpl(lithiumPlayerManager.getPlayer(player), key, data));
     }
 }
