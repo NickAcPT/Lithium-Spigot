@@ -31,11 +31,13 @@ import net.nickac.lithium.backend.controls.LContainerViewable;
 import net.nickac.lithium.backend.controls.LControl;
 import net.nickac.lithium.backend.controls.impl.LOverlay;
 import net.nickac.lithium.backend.controls.impl.LWindow;
-import net.nickac.lithium.backend.other.LithiumConstants;
-import net.nickac.lithium.backend.serializer.SerializationUtils;
-import net.nickac.lithium.frontend.LithiumPlugin;
-import net.nickac.lithium.frontend.LithiumUtils;
 import net.nickac.lithium.frontend.container.ContainerManager;
+import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.Message;
+import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketHandler;
+import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketHandlerImpl;
+import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketOut;
+import net.nickac.lithium.frontend.pluginchannel.packets.out.CloseWindow;
+import net.nickac.lithium.frontend.pluginchannel.packets.out.ControlChanged;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -46,6 +48,8 @@ import java.util.UUID;
 public class LithiumPlayer {
 
     private ContainerManager containerManager;
+
+    private PacketHandler packetHandler;
 
     @Getter
     @Setter
@@ -59,23 +63,24 @@ public class LithiumPlayer {
 
     LithiumPlayer(ContainerManager containerManager, Player handle, boolean usingLithium) {
         this.containerManager = containerManager;
+        this.packetHandler = new PacketHandlerImpl(this);
         this.handle = handle;
         this.usingLithium = usingLithium;
-    }
-
-    public void sendLithiumMessage(String msg) {
-        handle.sendPluginMessage(
-                LithiumPlugin.getInstance(),
-                LithiumPlugin.LITHIUM_CHANNEL,
-                LithiumUtils.writeUTF8String(msg)
-        );
     }
 
     public void refreshControl(UUID uuid) {
         LControl c = getControlById(uuid);
         if (usingLithium && c != null && uuid != null) {
-            sendLithiumMessage(LithiumConstants.TO_CLIENT.CONTROL_CHANGED + SerializationUtils.objectToString(c));
+            packetHandler.write(new ControlChanged(c));
         }
+    }
+
+    public void read(Message message) {
+        packetHandler.read(message);
+    }
+
+    public void writePacket(PacketOut packetOut) {
+        packetHandler.write(packetOut);
     }
 
     public UUID getUniqueId(){
@@ -93,7 +98,7 @@ public class LithiumPlayer {
     public void closeInterface() {
         //TODO: Force Close!
         if (usingLithium) {
-            sendLithiumMessage(LithiumConstants.TO_CLIENT.CLOSE_WINDOW);
+            packetHandler.write(new CloseWindow());
             setCurrentContainer(null);
         }
     }

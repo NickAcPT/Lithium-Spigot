@@ -31,16 +31,15 @@ import net.nickac.lithium.backend.controls.impl.LOverlay;
 import net.nickac.lithium.backend.controls.impl.LWindow;
 import net.nickac.lithium.backend.other.LithiumConstants;
 import net.nickac.lithium.backend.other.serverhandlers.LithiumRuntimeControlHandler;
-import net.nickac.lithium.backend.serializer.SerializationUtils;
 import net.nickac.lithium.frontend.container.ContainerManager;
 import net.nickac.lithium.frontend.container.ContainerMap;
 import net.nickac.lithium.frontend.events.PlayerEvents;
 import net.nickac.lithium.frontend.players.LithiumPlayer;
 import net.nickac.lithium.frontend.players.LithiumPlayerManager;
 import net.nickac.lithium.frontend.pluginchannel.LithiumListener;
-import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketHandler;
-import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketHandlerImpl;
+import net.nickac.lithium.frontend.pluginchannel.packets.out.AddToContainer;
 import net.nickac.lithium.frontend.pluginchannel.packets.out.ReceiveWindow;
+import net.nickac.lithium.frontend.pluginchannel.packets.out.RemoveFromContainer;
 import net.nickac.lithium.frontend.pluginchannel.packets.out.ShowOverlay;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -66,7 +65,6 @@ public class LithiumPlugin extends JavaPlugin {
      */
     @Getter
     private LithiumPlayerManager playerManager;
-    private PacketHandler lithiumPacketHandler;
     private ContainerManager containerManager;
     private ContainerMap containerMap;
 
@@ -86,7 +84,7 @@ public class LithiumPlugin extends JavaPlugin {
 
         this.containerManager = new ContainerManager(containerMap);
         playerManager = new LithiumPlayerManager(containerManager);
-        this.lithiumPacketHandler = new PacketHandlerImpl();
+
         LithiumConstants.onRefresh = (viewer, c) -> {
             Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
                 if (viewer != null) {
@@ -103,7 +101,7 @@ public class LithiumPlugin extends JavaPlugin {
             public void addControl(LControl c, LContainer ct, UUID viewer) {
                 Player p = Bukkit.getPlayer(viewer);
                 if (p != null && ct instanceof LControl) {
-                    playerManager.getPlayer(p).sendLithiumMessage(LithiumConstants.TO_CLIENT.ADD_TO_CONTAINER + ct.getUUID() + "|" + SerializationUtils.objectToString(c));
+                    playerManager.getPlayer(p).writePacket(new AddToContainer(ct, c));
                 }
             }
 
@@ -111,13 +109,13 @@ public class LithiumPlugin extends JavaPlugin {
             public void removeControl(LControl c, LContainer ct, UUID viewer) {
                 Player p = Bukkit.getPlayer(viewer);
                 if (p != null && ct instanceof LControl) {
-                    playerManager.getPlayer(p).sendLithiumMessage(LithiumConstants.TO_CLIENT.REMOVE_FROM_CONTAINER + ct.getUUID() + "|" + c.getUUID());
+                    playerManager.getPlayer(p).writePacket(new RemoveFromContainer(ct, c));
                 }
             }
         };
         LithiumConstants.onClose = (c, viewer) -> playerManager.getPlayer(Bukkit.getPlayer(viewer)).closeInterface();
         //We need to register the incoming message plugin message!
-        Bukkit.getMessenger().registerIncomingPluginChannel(this, LITHIUM_CHANNEL, new LithiumListener(lithiumPacketHandler, playerManager));
+        Bukkit.getMessenger().registerIncomingPluginChannel(this, LITHIUM_CHANNEL, new LithiumListener(playerManager));
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, LITHIUM_CHANNEL);
         Bukkit.getPluginManager().registerEvents(new PlayerEvents(playerManager), this);
     }

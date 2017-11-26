@@ -29,7 +29,6 @@ package net.nickac.lithium.frontend.pluginchannel;
 import net.nickac.lithium.frontend.LithiumUtils;
 import net.nickac.lithium.frontend.players.LithiumPlayerManager;
 import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.MessageImpl;
-import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
@@ -42,11 +41,9 @@ import java.util.List;
  */
 public class LithiumListener implements PluginMessageListener {
 
-    private PacketHandler packetHandler;
     private LithiumPlayerManager lithiumPlayerManager;
 
-    public LithiumListener(PacketHandler packetHandler, LithiumPlayerManager lithiumPlayerManager) {
-        this.packetHandler = packetHandler;
+    public LithiumListener(LithiumPlayerManager lithiumPlayerManager) {
         this.lithiumPlayerManager = lithiumPlayerManager;
     }
 
@@ -61,6 +58,6 @@ public class LithiumListener implements PluginMessageListener {
             List<String> par = Arrays.asList(msgArray).subList(1, msgArray.length);
             data.addAll(par);
         }
-        packetHandler.handlePacket(new MessageImpl(lithiumPlayerManager.getPlayer(player), key, data));
+        lithiumPlayerManager.getPlayer(player).read(new MessageImpl(lithiumPlayerManager.getPlayer(player), key, data));
     }
 }

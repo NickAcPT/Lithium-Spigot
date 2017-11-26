@@ -38,8 +38,7 @@ public class ContainerManager {
 
                 try {
                     PacketOut packetObject = packetConstructor.newInstance(containerViewable);
-                    System.out.println(packetObject.execute());
-                    lithiumPlayer.sendLithiumMessage(String.join("|", packetObject.execute()));
+                    lithiumPlayer.writePacket(packetObject);
                 } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
                     e.printStackTrace();
                 }
