@@ -14,7 +14,6 @@ public class TextboxTextChanged implements PacketIn {
     @Override
     public void execute(LithiumPlayer player, List<String> data) {
         LControl w = player.getControlById(UUID.fromString(data.get(0)));
-        System.out.println(w);
         if (w != null && w instanceof LTextBox) {
             LTextBox txt = (LTextBox) w;
             txt.setInternalText(SerializationUtils.stringToObject(data.get(1), String.class));
