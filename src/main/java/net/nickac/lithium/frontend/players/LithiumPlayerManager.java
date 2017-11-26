@@ -27,6 +27,7 @@
 package net.nickac.lithium.frontend.players;
 
 import lombok.NonNull;
+import net.nickac.lithium.frontend.container.ContainerManager;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -37,8 +38,10 @@ import java.util.UUID;
  */
 public class LithiumPlayerManager {
 	private HashMap<UUID, LithiumPlayer> players = new HashMap<>();
+	private ContainerManager containerManager;
 
-	public LithiumPlayerManager() {
+	public LithiumPlayerManager(ContainerManager containerManager) {
+		this.containerManager = containerManager;
 	}
 
 	public LithiumPlayer getPlayer(Player p) {
@@ -46,7 +49,7 @@ public class LithiumPlayerManager {
 	}
 
 	public void addPlayer(Player p) {
-		players.put(p.getUniqueId(), new LithiumPlayer(p, false));
+		players.put(p.getUniqueId(), new LithiumPlayer(containerManager, p, false));
 	}
 
 	public boolean isUsingLithium(Player p) {
