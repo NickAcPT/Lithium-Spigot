@@ -3,39 +3,51 @@ package net.nickac.lithium.frontend.container;
 import net.nickac.lithium.backend.controls.LContainer;
 import net.nickac.lithium.backend.controls.LContainerViewable;
 import net.nickac.lithium.backend.controls.LControl;
-import net.nickac.lithium.backend.controls.impl.LOverlay;
-import net.nickac.lithium.backend.controls.impl.LWindow;
-import net.nickac.lithium.backend.other.LithiumConstants;
-import net.nickac.lithium.backend.serializer.SerializationUtils;
 import net.nickac.lithium.frontend.players.LithiumPlayer;
+import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketOut;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class ContainerManager {
 
-    private Map<UUID,LContainerViewable> viewableMap = new HashMap<>();
-    private HashMap<UUID, LControl> controls = new HashMap<>();
-
     static {
-        //todo should be moved outside
-        ContainerMap.instance.registerContainer(LWindow.class, LithiumConstants.TO_CLIENT.RECEIVE_WINDOW);
-        ContainerMap.instance.registerContainer(LOverlay.class, LithiumConstants.TO_CLIENT.SHOW_OVERLAY);
+
     }
 
-    public void openContainer(LithiumPlayer lithiumPlayer,LContainerViewable containerViewable){
-        if(lithiumPlayer.isUsingLithium()){
-            if(containerViewable.getViewer()==null){
+    private Map<UUID, LContainerViewable> viewableMap = new HashMap<>();
+    private Map<UUID, LControl> controls = new HashMap<>();
+    private ContainerMap containerMap;
+
+    public ContainerManager(ContainerMap containerMap) {
+        this.containerMap = containerMap;
+    }
+
+    public void openContainer(LithiumPlayer lithiumPlayer, LContainerViewable containerViewable) {
+        if (lithiumPlayer.isUsingLithium()) {
+            if (containerViewable.getViewer() == null) {
                 containerViewable.setViewer(lithiumPlayer.getHandle().getUniqueId());
-            }else {
+            } else {
                 return;
             }
 
-            viewableMap.put(containerViewable.getUUID(),containerViewable);
-            containerViewable.getControls().forEach(this::registerControl);
-            lithiumPlayer.setCurrentContainer(containerViewable);
-            lithiumPlayer.sendLithiumMessage(ContainerMap.instance.getByClass(containerViewable.getClass())+"|"+ SerializationUtils.objectToString(containerViewable));
+            Constructor<? extends PacketOut> packetConstructor = containerMap.getByClass(containerViewable.getClass());
+            if (packetConstructor != null) {
+                viewableMap.put(containerViewable.getUUID(), containerViewable);
+                containerViewable.getControls().forEach(this::registerControl);
+                lithiumPlayer.setCurrentContainer(containerViewable);
+
+                try {
+                    PacketOut packetObject = packetConstructor.newInstance(containerViewable);
+                    lithiumPlayer.sendLithiumMessage(String.join("|", packetObject.execute()));
+                } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
     }
 
@@ -64,11 +76,11 @@ public class ContainerManager {
         viewableMap.remove(u);
     }
 
-    public LContainerViewable getViewableById(UUID uuid){
+    public LContainerViewable getViewableById(UUID uuid) {
         return viewableMap.get(uuid);
     }
 
-    public LControl getControlById(UUID uuid){
+    public LControl getControlById(UUID uuid) {
         return controls.get(uuid);
     }
 

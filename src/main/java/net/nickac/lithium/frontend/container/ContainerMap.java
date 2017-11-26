@@ -3,27 +3,33 @@ package net.nickac.lithium.frontend.container;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.nickac.lithium.backend.controls.LContainerViewable;
+import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketOut;
+
+import java.lang.reflect.Constructor;
 
 public class ContainerMap {
 
-    public final static ContainerMap instance = new ContainerMap();
 
-    private ContainerMap(){
+    private final BiMap<Class<? extends LContainerViewable>, Constructor<? extends PacketOut>> classStringMap;
+
+    public ContainerMap() {
+        classStringMap = HashBiMap.create();
     }
 
-    private final BiMap<Class<? extends LContainerViewable>,String> classStringMap = HashBiMap.create();
+    public void registerContainer(Class<? extends LContainerViewable> key, Class<? extends PacketOut> value) {
 
-    public void registerContainer(Class<? extends LContainerViewable> key, String value){
-        classStringMap.put(key,value);
+        try {
+            Constructor<? extends PacketOut> constructor = value.getConstructor(key);
+            classStringMap.put(key, constructor);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
-    public String getByClass(Class<? extends LContainerViewable> lClass){
+    public Constructor<? extends PacketOut> getByClass(Class<? extends LContainerViewable> lClass) {
         return classStringMap.get(lClass);
     }
 
-    public Class<? extends LContainerViewable> getByString(String keyString){
-        return classStringMap.inverse().get(keyString);
-    }
 
 
 }

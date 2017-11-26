@@ -1,7 +1,8 @@
 package net.nickac.lithium.frontend.pluginchannel.packets.abstracts;
 
-public interface PacketOut {
-    String execute();
+import java.util.List;
 
+public interface PacketOut {
+    List<String> execute();
     String key();
 }

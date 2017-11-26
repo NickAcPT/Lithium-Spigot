@@ -52,7 +52,8 @@ public class LithiumListener implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String s, Player player, byte[] bytes) {
-        String[] msgArray = LithiumUtils.readUTF8String(bytes).trim().split("|");
+        String message = LithiumUtils.readUTF8String(bytes).trim();
+        String[] msgArray = message.split("|");
         String key = msgArray[0];
         List<String> data = Arrays.asList(msgArray).subList(1, msgArray.length - 1);
         packetHandler.handlePacket(new MessageImpl(lithiumPlayerManager.getPlayer(player), key, data));

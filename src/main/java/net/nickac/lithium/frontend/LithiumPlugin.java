@@ -27,16 +27,21 @@ package net.nickac.lithium.frontend;
 import lombok.Getter;
 import net.nickac.lithium.backend.controls.LContainer;
 import net.nickac.lithium.backend.controls.LControl;
+import net.nickac.lithium.backend.controls.impl.LOverlay;
+import net.nickac.lithium.backend.controls.impl.LWindow;
 import net.nickac.lithium.backend.other.LithiumConstants;
 import net.nickac.lithium.backend.other.serverhandlers.LithiumRuntimeControlHandler;
 import net.nickac.lithium.backend.serializer.SerializationUtils;
 import net.nickac.lithium.frontend.container.ContainerManager;
+import net.nickac.lithium.frontend.container.ContainerMap;
 import net.nickac.lithium.frontend.events.PlayerEvents;
 import net.nickac.lithium.frontend.players.LithiumPlayer;
 import net.nickac.lithium.frontend.players.LithiumPlayerManager;
 import net.nickac.lithium.frontend.pluginchannel.LithiumListener;
-import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketHandlerImpl;
 import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketHandler;
+import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketHandlerImpl;
+import net.nickac.lithium.frontend.pluginchannel.packets.out.ReceiveWindow;
+import net.nickac.lithium.frontend.pluginchannel.packets.out.ShowOverlay;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -63,6 +68,7 @@ public class LithiumPlugin extends JavaPlugin {
     private LithiumPlayerManager playerManager;
     private PacketHandler lithiumPacketHandler;
     private ContainerManager containerManager;
+    private ContainerMap containerMap;
 
     public static LithiumPlugin getInstance() {
         return instance;
@@ -71,7 +77,14 @@ public class LithiumPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        this.containerManager = new ContainerManager();
+        this.containerMap = new ContainerMap();
+
+
+        containerMap.registerContainer(LWindow.class, ReceiveWindow.class);
+        containerMap.registerContainer(LOverlay.class, ShowOverlay.class);
+
+
+        this.containerManager = new ContainerManager(containerMap);
         playerManager = new LithiumPlayerManager(containerManager);
         this.lithiumPacketHandler = new PacketHandlerImpl();
         LithiumConstants.onRefresh = (viewer, c) -> {
