@@ -7,15 +7,19 @@ import net.nickac.lithium.frontend.pluginchannel.packets.abstracts.PacketIn;
 
 import java.util.List;
 
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.GRAY;
-import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.*;
 
 public class LithiumOk implements PacketIn {
     @Override
     public void execute(LithiumPlayer player, List<String> data) {
-        player.getHandle().sendMessage(GRAY + "[" + GOLD + "Lithium" + GRAY + "] " + GREEN + "Thank you for using Lithium!");
-        LithiumPlugin.getInstance().getPlayerManager().setUsingLithium(player.getUniqueId(), true);
+        String version = data.get(0);
+        if (version.equalsIgnoreCase(LithiumConstants.VERSION)) {
+            player.getHandle().sendMessage(GRAY + "[" + GOLD + "Lithium" + GRAY + "] " + GREEN + "Thank you for using Lithium!");
+            LithiumPlugin.getInstance().getPlayerManager().setUsingLithium(player.getUniqueId(), true);
+        } else {
+            player.getHandle().sendMessage(GRAY + "[" + GOLD + "Lithium" + GRAY + "] " + RED + "Wrong version of Lithium! You need version: " + version);
+        }
+
     }
 
     @Override
