@@ -27,39 +27,43 @@
 package net.nickac.lithium.frontend.players;
 
 import lombok.NonNull;
+import net.nickac.lithium.frontend.container.ContainerManager;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by NickAc for Lithium!
  */
 public class LithiumPlayerManager {
-	private HashMap<UUID, LithiumPlayer> players = new HashMap<>();
+    private Map<UUID, LithiumPlayer> players = new HashMap<>();
+    private ContainerManager containerManager;
 
-	public LithiumPlayerManager() {
-	}
+    public LithiumPlayerManager(ContainerManager containerManager) {
+        this.containerManager = containerManager;
+    }
 
-	public LithiumPlayer getPlayer(Player p) {
-		return players.get(p.getUniqueId());
-	}
+    public LithiumPlayer getPlayer(Player p) {
+        return players.get(p.getUniqueId());
+    }
 
-	public void addPlayer(Player p) {
-		players.put(p.getUniqueId(), new LithiumPlayer(p, false));
-	}
+    public void addPlayer(Player p) {
+        players.put(p.getUniqueId(), new LithiumPlayer(containerManager, p, false));
+    }
 
-	public boolean isUsingLithium(Player p) {
-		return players.containsKey(p.getUniqueId()) && players.get(p.getUniqueId()).isUsingLithium();
-	}
+    public boolean isUsingLithium(Player p) {
+        return players.containsKey(p.getUniqueId()) && players.get(p.getUniqueId()).isUsingLithium();
+    }
 
-	public void setUsingLithium(UUID u, boolean using) {
-		if (players.containsKey(u)) {
-			players.get(u).setUsingLithium(using);
-		}
-	}
+    public void setUsingLithium(UUID u, boolean using) {
+        if (players.containsKey(u)) {
+            players.get(u).setUsingLithium(using);
+        }
+    }
 
-	public void removePlayer(@NonNull Player player) {
-		players.remove(player.getUniqueId());
-	}
+    public void removePlayer(@NonNull Player player) {
+        players.remove(player.getUniqueId());
+    }
 }
