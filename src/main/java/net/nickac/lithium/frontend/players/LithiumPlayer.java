@@ -87,10 +87,26 @@ public class LithiumPlayer {
         return handle.getUniqueId();
     }
 
+    public void openContainer(LContainerViewable containerViewable){
+        containerManager.openContainer(this,containerViewable);
+    }
+
+    /**
+     * Use openContainer instead
+     *
+     * @param w
+     */
+    @Deprecated
     public void openInterface(LWindow w) {
         containerManager.openContainer(this, w);
     }
 
+    /**
+     * Use openContainer instead
+     *
+     * @param o
+     */
+    @Deprecated
     public void openOverlay(LOverlay o) {
         containerManager.openContainer(this, o);
     }

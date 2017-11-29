@@ -54,7 +54,7 @@ public class LithiumPlugin extends JavaPlugin {
     /**
      * Get the plugin channel of Lithium
      */
-    public static String LITHIUM_CHANNEL = "Lithium";
+    public final static String LITHIUM_CHANNEL = "Lithium";
     /**
      * Instance
      */
