@@ -40,22 +40,38 @@
                         <configuration>
                             <proguardVersion>5.2</proguardVersion>
                             <options>
-                                <option>-allowaccessmodification</option>
-                                <!--<option>-dontshrink</option>-->
-                                <option>-repackageclasses</option>
-                                <option>-dontoptimize</option>
-                                <option>-dontnote</option>
-                                <option>-keepattributes Signature</option>
-                                <option>-keep interface net.nickac.lithium.backend.** {*;}</option>
-                                <option>-keep class net.nickac.lithium.frontend.LithiumPlugin {
+                                <option>
+                                    -allowaccessmodification
+                                </option>
+                                <option>
+                                    -repackageclasses
+                                </option>
+                                <option>
+                                    -dontoptimize
+                                </option>
+                                <option>
+                                    -dontnote
+                                </option>
+                                <option>
+                                    -keepattributes Signature
+                                </option>
+                                <option>
+                                    -keep interface net.nickac.lithium.backend.** {*;}
+                                </option>
+                                <option>
+                                    -keep class net.nickac.lithium.frontend.LithiumPlugin {
                                     public
                                     *; }
                                 </option>
-                                <option>-keepnames class net.nickac.lithium.frontend.LithiumPlugin {
+                                <option>
+                                    -keepnames class net.nickac.lithium.frontend.LithiumPlugin {
                                     public *; }
                                 </option>
-                                <option>-keep enum net.nickac.lithium.backend.** {*;}</option>
-                                <option>-keepclassmembernames class
+                                <option>
+                                    -keep enum net.nickac.lithium.backend.** {*;}
+                                </option>
+                                <option>
+                                    -keepclassmembernames class
                                     net.nickac.lithium.frontend.LithiumPlugin {
                                     !private *;
                                     }
@@ -63,19 +79,25 @@
                                 -keep class mypackage.MyCallbackClass {
                                 void myCallbackMethod(java.lang.String);
                                 }
-                                <option>-keep class net.nickac.lithium.frontend.players.LithiumPlayerManager {
+                                <option>
+                                    -keep class
+                                    net.nickac.lithium.frontend.players.LithiumPlayerManager {
                                     public boolean isUsingLithium(org.bukkit.entity.Player);
-                                    public net.nickac.lithium.frontend.players.LithiumPlayer getPlayer(org.bukki.entity.Player);
-                                    }</option>
+                                    public net.nickac.lithium.frontend.players.LithiumPlayer
+                                    getPlayer(org.bukki.entity.Player);
+                                    }
+                                </option>
                                 <option>
                                     -keep class net.nickac.lithium.frontend.players.LithiumPlayer {
                                     public void refreshControl(java.util.UUID);
                                     public java.util.UUID getUniqueId();
-                                    public void openContainer(net.nickac.lithium.backend.controls.LContainerViewable);
+                                    public void
+                                    openContainer(net.nickac.lithium.backend.controls.LContainerViewable);
                                     public void closeInterface();
                                     }
                                 </option>
-                                <option>-keep class net.nickac.lithium.backend.** { *; }
+                                <option>
+                                    -keep class net.nickac.lithium.backend.** { *; }
                                 </option>
                             </options>
                             <libs>
@@ -103,7 +125,11 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <minimizeJar>false</minimizeJar>
+                        </configuration>
                     </execution>
+
                 </executions>
             </plugin>
 
